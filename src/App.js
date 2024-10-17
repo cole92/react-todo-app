@@ -8,9 +8,16 @@ import Event from './components/Event';
 
 
 class App extends Component {
-  state = {
-
-  };
+  constructor(props) {
+    super(props)
+    this.state = {
+      events: [
+        {time: '09:30' , title: 'Sastanak sa Aleksandrom'},
+        {time: '10:30', title: 'Sastanak sa Lazarom'},
+        {time: '12:00', title: 'Rucak'}
+      ]
+    }
+  }
   
   render() {
     return (
@@ -18,8 +25,7 @@ class App extends Component {
         <MDBContainer>
           <MDBRow>
             <MDBCol md='9'>
-            <Event />
-            <Event />
+              {this.myLoppFunction()}
             </MDBCol>
             <MDBCol md='3'>
             </MDBCol>
@@ -29,6 +35,16 @@ class App extends Component {
     )
   }
 
+  myLoppFunction() {
+    const myArr = this.state.events.map(x => (
+      <Event
+        time={x.time}
+        title={x.title}
+      />
+    ));
+    console.log(myArr);
+    return myArr
+  }
 };
 
 export default App;
