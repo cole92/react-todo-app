@@ -13,7 +13,9 @@ class Event extends Component {
                 </div>
 
                 <div className='media-body mb-3 mb-lg-3'>
-                    <MDBBadge color='danger' className='ml-2 float-right'>
+                    <MDBBadge color='danger' className='ml-2 float-right'
+                        onClick={() => this.props.onDelete(this.props.id)}
+                    >
                         -
                     </MDBBadge>
                     <h6 className='mt-0 font-weight-bold'> {this.props.title}</h6> {" "}
