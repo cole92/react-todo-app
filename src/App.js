@@ -33,6 +33,11 @@ class App extends Component {
       ]
     }
   }
+
+  handleDelete = eventId => {
+    const events = this.state.events.filter(e => e.id !== eventId);
+    this.setState({events});
+  }
   
   render() {
     return (
@@ -50,6 +55,7 @@ class App extends Component {
                   title={x.title}
                   location={x.location}
                   description={x.description}
+                  onDelete={this.handleDelete}
                 />
               ))}
               </div>
