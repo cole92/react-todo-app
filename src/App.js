@@ -37,6 +37,7 @@ class App extends Component {
     }
   }
   // Metoda za uzimanje i promenu vrednosti u stanju iz input polja
+  // (currying tehnika, computed property names)
   handleInputChange = inputName => value => {
     const nextValue = value;
     this.setState({
@@ -55,6 +56,26 @@ class App extends Component {
   handleDelete = (eventId) => {
     const events = this.state.events.filter(e => e.id !== eventId);
     this.setState({ events });
+  };
+  // Metoda za azuriranje state-a
+  addEvent = () => {
+    let newArray = [...this.state.events] // Kopija state-a
+    newArray.push({
+      id: newArray.length ? newArray[newArray.length -1].id + 1 : 1,
+      time: this.state.time,
+      title: this.state.title,
+      location: this.state.location,
+      description: this.state.description,
+    });
+    this.setState({
+      events: newArray
+    });
+    this.setState({
+      time: "",
+      title: "",
+      location: "",
+      description: ""
+    })
   };
 
   render() {
@@ -135,7 +156,54 @@ class App extends Component {
                 >
                   Add new event
                 </MDBModalHeader>
-                <MDBModalBody>Body</MDBModalBody>
+                <MDBModalBody>
+                  <form className='mx-3 gray-text'>
+                    <MDBInput 
+                      name='time'
+                      label='Time'
+                      icon='clock'
+                      hint='12:30'
+                      group
+                      type='text'
+                      getValue={this.handleInputChange('time')}
+                    />
+                    <MDBInput 
+                      name='title'
+                      label='Title'
+                      icon='edit'
+                      hint='Briefing'
+                      group
+                      type='text'
+                      getValue={this.handleInputChange('title')}
+                    />
+                    <MDBInput 
+                      name='location'
+                      label='Location (optional)'
+                      icon='map'
+                      group
+                      type='text'
+                      getValue={this.handleInputChange('location')}
+                    />
+                    <MDBInput 
+                      name='descritpion'
+                      label='Descritpion (optional)'
+                      icon='sticky-note'
+                      group
+                      type='text'
+                      getValue={this.handleInputChange('description')}
+                    />
+                    <button
+                      type='button'
+                      className='btn btn-info rounded'
+                      onClick={() => {
+                        this.toggleModal();
+                        this.addEvent();
+                      }}
+                    >
+                      Add Event
+                    </button>
+                  </form>
+                </MDBModalBody>
                 <MDBModalFooter className='justify-content-center'></MDBModalFooter>
         </MDBModal>
       </React.Fragment>
