@@ -5,6 +5,7 @@ import 'mdbreact/dist/css/mdb.css';
 import { MDBBtn, MDBInput, MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter, MDBIcon, MDBBadge, MDBContainer, MDBRow, MDBCol } from 'mdbreact';
 import './App.css';
 import Event from './components/Event';
+import EventModal from './components/EventModal';
 
 class App extends Component {
   constructor(props) {
@@ -61,7 +62,7 @@ class App extends Component {
   addEvent = () => {
     let newArray = [...this.state.events] // Kopija state-a
     newArray.push({
-      id: newArray.length ? newArray[newArray.length -1].id + 1 : 1,
+      id: newArray.length ? newArray[newArray.length - 1].id + 1 : 1,
       time: this.state.time,
       title: this.state.title,
       location: this.state.location,
@@ -144,66 +145,12 @@ class App extends Component {
             </MDBCol>
           </MDBRow>
         </MDBContainer>
-
-        {/* Modal prozor za dodavanje novog dogadjaja */}
-        <MDBModal isOpen={this.state.modal} toggle={this.toggleModal}>
-                <MDBModalHeader
-                  className='text-center'
-                  titleClass='w-100 font-weight-bold'
-                  toggle={this.toggleModal}
-                >
-                  Add new event
-                </MDBModalHeader>
-                <MDBModalBody>
-                  <form className='mx-3 gray-text'>
-                    <MDBInput 
-                      name='time'
-                      label='Time'
-                      icon='clock'
-                      hint='12:30'
-                      group
-                      type='text'
-                      getValue={this.handleInputChange('time')}
-                    />
-                    <MDBInput 
-                      name='title'
-                      label='Title'
-                      icon='edit'
-                      hint='Briefing'
-                      group
-                      type='text'
-                      getValue={this.handleInputChange('title')}
-                    />
-                    <MDBInput 
-                      name='location'
-                      label='Location (optional)'
-                      icon='map'
-                      group
-                      type='text'
-                      getValue={this.handleInputChange('location')}
-                    />
-                    <MDBInput 
-                      name='descritpion'
-                      label='Descritpion (optional)'
-                      icon='sticky-note'
-                      group
-                      type='text'
-                      getValue={this.handleInputChange('description')}
-                    />
-                    <button
-                      type='button'
-                      className='btn btn-info rounded'
-                      onClick={() => {
-                        this.toggleModal();
-                        this.addEvent();
-                      }}
-                    >
-                      Add Event
-                    </button>
-                  </form>
-                </MDBModalBody>
-                <MDBModalFooter className='justify-content-center'></MDBModalFooter>
-        </MDBModal>
+        <EventModal
+          isOpen={this.state.modal}
+          toggle={this.toggleModal}
+          handleInputChange={this.handleInputChange}
+          addEvent={this.addEvent}
+        />
       </React.Fragment>
     );
   }
