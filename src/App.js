@@ -68,14 +68,12 @@ class App extends Component {
       description: this.state.description,
     });
     this.setState({
-      events: newArray
-    });
-    this.setState({
+      events: newArray,
       time: "",
       title: "",
       location: "",
       description: ""
-    })
+    });
   };
 
   render() {
