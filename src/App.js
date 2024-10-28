@@ -7,37 +7,25 @@ import './App.css';
 import Event from './components/Event';
 import EventModal from './components/EventModal';
 import { addNewEvent, deleteEvent } from './components/EventService';
+import { getEventsFromStorage, saveEventstoStorage } from './components/StorageService';
 
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
       modal: false, // Modal pocinje kao zatvoren
-      events: [
-        {
-          id: 1,
-          time: '09:30',
-          title: 'Sastanak sa Aleksandrom',
-          location: 'Kragujevac',
-          description: 'Opis'
-        },
-        {
-          id: 2,
-          time: '10:30',
-          title: 'Sastanak sa Lazarom',
-          location: 'Aleksinac',
-          description: 'Opis'
-        },
-        {
-          id: 3,
-          time: '12:00',
-          title: 'Rucak',
-          location: 'Banovo brdo',
-          description: 'Vazno!'
-        }
-      ]
+      events: []
     }
   }
+
+  componentDidMount() {
+    // Preuzimanje dogadjaja iz localStorage kada se komponenta ucita
+    const storedEvents = getEventsFromStorage();
+    if (storedEvents.length > 0) {
+      this.setState({ events: storedEvents });
+    }
+  };
+
   // Metoda za uzimanje i promenu vrednosti u stanju iz input polja
   handleInputChange = inputName => value => {
     const nextValue = value;
@@ -53,8 +41,8 @@ class App extends Component {
     });
   };
 
-   // Metoda za dodavanje novog dogadjaja (koristimo addNewEvent iz EventService.js)
-   addEvent = () => {
+  // Metoda za dodavanje novog dogadjaja (koristimo addNewEvent iz EventService.js)
+  addEvent = () => {
     const newEvent = {
       time: this.state.time,
       title: this.state.title,
@@ -69,12 +57,14 @@ class App extends Component {
       location: "",
       description: ""
     });
+    saveEventstoStorage(updatedEvents); // Cuvamo nove dogadjaje u storage
   };
 
   // Metoda za brisanje događaja (koristimo deleteEvent iz EventService.js)
   handleDelete = (eventId) => {
     const updatedEvents = deleteEvent(this.state.events, eventId); // Koristimo funkciju deleteEvent
     this.setState({ events: updatedEvents });
+    saveEventstoStorage(updatedEvents); // Cuvamo azurirani niz u storage
   };
 
   render() {
@@ -86,17 +76,23 @@ class App extends Component {
             <MDBCol md='9'>
               <h2 className='text-uppercase my-3'>Today:</h2>
               <div id="schedule-items">
-                {this.state.events.map(x => (
-                  <Event
-                    key={x.id}
-                    id={x.id}
-                    time={x.time}
-                    title={x.title}
-                    location={x.location}
-                    description={x.description}
-                    onDelete={this.handleDelete} // Prosledjujemo metodu za brisanje događaja
-                  />
-                ))}
+                {this.state.events.length === 0 ? (
+                  <div className="no-events">
+                    <h2>No scheduled events. Click "Add event" to create your first event!</h2>
+                  </div>
+                ) : (
+                  this.state.events.map(x => (
+                    <Event
+                      key={x.id}
+                      id={x.id}
+                      time={x.time}
+                      title={x.title}
+                      location={x.location}
+                      description={x.description}
+                      onDelete={this.handleDelete} // Prosledjivanje metode za brisanje dogadjaja
+                    />
+                  ))
+                )}
               </div>
 
               {/* Dugme za otvaranje modalnog prozora za dodavanje novog dogadjaja */}
