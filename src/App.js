@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import 'mdbreact/dist/css/mdb.css';
-import { MDBBtn, MDBInput, MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter, MDBIcon, MDBBadge, MDBContainer, MDBRow, MDBCol } from 'mdbreact';
+import { MDBIcon, MDBContainer, MDBRow, MDBCol } from 'mdbreact';
 import './App.css';
 import Event from './components/Event';
+import EventModal from './components/EventModal';
+import { addNewEvent, deleteEvent } from './components/EventService';
 
 class App extends Component {
   constructor(props) {
@@ -37,7 +39,6 @@ class App extends Component {
     }
   }
   // Metoda za uzimanje i promenu vrednosti u stanju iz input polja
-  // (currying tehnika, computed property names)
   handleInputChange = inputName => value => {
     const nextValue = value;
     this.setState({
@@ -52,30 +53,28 @@ class App extends Component {
     });
   };
 
-  // Metoda za brisanje dogadjaja na osnovu id-a
-  handleDelete = (eventId) => {
-    const events = this.state.events.filter(e => e.id !== eventId);
-    this.setState({ events });
-  };
-  // Metoda za azuriranje state-a
-  addEvent = () => {
-    let newArray = [...this.state.events] // Kopija state-a
-    newArray.push({
-      id: newArray.length ? newArray[newArray.length -1].id + 1 : 1,
+   // Metoda za dodavanje novog dogadjaja (koristimo addNewEvent iz EventService.js)
+   addEvent = () => {
+    const newEvent = {
       time: this.state.time,
       title: this.state.title,
       location: this.state.location,
       description: this.state.description,
-    });
+    };
+    const updatedEvents = addNewEvent(this.state.events, newEvent); // Koristimo funkciju addNewEvent
     this.setState({
-      events: newArray
-    });
-    this.setState({
+      events: updatedEvents,
       time: "",
       title: "",
       location: "",
       description: ""
-    })
+    });
+  };
+
+  // Metoda za brisanje događaja (koristimo deleteEvent iz EventService.js)
+  handleDelete = (eventId) => {
+    const updatedEvents = deleteEvent(this.state.events, eventId); // Koristimo funkciju deleteEvent
+    this.setState({ events: updatedEvents });
   };
 
   render() {
@@ -87,7 +86,6 @@ class App extends Component {
             <MDBCol md='9'>
               <h2 className='text-uppercase my-3'>Today:</h2>
               <div id="schedule-items">
-                {/* Mapiranje kroz niz događaja i prikaz Event komponente za svaki */}
                 {this.state.events.map(x => (
                   <Event
                     key={x.id}
@@ -96,7 +94,7 @@ class App extends Component {
                     title={x.title}
                     location={x.location}
                     description={x.description}
-                    onDelete={this.handleDelete} // Prosledjivanje metode za brisanje dogadjaja
+                    onDelete={this.handleDelete} // Prosledjujemo metodu za brisanje događaja
                   />
                 ))}
               </div>
@@ -146,66 +144,12 @@ class App extends Component {
             </MDBCol>
           </MDBRow>
         </MDBContainer>
-
-        {/* Modal prozor za dodavanje novog dogadjaja */}
-        <MDBModal isOpen={this.state.modal} toggle={this.toggleModal}>
-                <MDBModalHeader
-                  className='text-center'
-                  titleClass='w-100 font-weight-bold'
-                  toggle={this.toggleModal}
-                >
-                  Add new event
-                </MDBModalHeader>
-                <MDBModalBody>
-                  <form className='mx-3 gray-text'>
-                    <MDBInput 
-                      name='time'
-                      label='Time'
-                      icon='clock'
-                      hint='12:30'
-                      group
-                      type='text'
-                      getValue={this.handleInputChange('time')}
-                    />
-                    <MDBInput 
-                      name='title'
-                      label='Title'
-                      icon='edit'
-                      hint='Briefing'
-                      group
-                      type='text'
-                      getValue={this.handleInputChange('title')}
-                    />
-                    <MDBInput 
-                      name='location'
-                      label='Location (optional)'
-                      icon='map'
-                      group
-                      type='text'
-                      getValue={this.handleInputChange('location')}
-                    />
-                    <MDBInput 
-                      name='descritpion'
-                      label='Descritpion (optional)'
-                      icon='sticky-note'
-                      group
-                      type='text'
-                      getValue={this.handleInputChange('description')}
-                    />
-                    <button
-                      type='button'
-                      className='btn btn-info rounded'
-                      onClick={() => {
-                        this.toggleModal();
-                        this.addEvent();
-                      }}
-                    >
-                      Add Event
-                    </button>
-                  </form>
-                </MDBModalBody>
-                <MDBModalFooter className='justify-content-center'></MDBModalFooter>
-        </MDBModal>
+        <EventModal
+          isOpen={this.state.modal}
+          toggle={this.toggleModal}
+          handleInputChange={this.handleInputChange}
+          addEvent={this.addEvent}
+        />
       </React.Fragment>
     );
   }
