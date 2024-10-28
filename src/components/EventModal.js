@@ -2,7 +2,6 @@ import React from "react";
 import { MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter, MDBInput } from 'mdbreact';
 
 const EventModal = ({ isOpen, toggle, handleInputChange, addEvent }) => {
-    {/* Modal prozor za dodavanje novog dogadjaja */ }
     return (
         <MDBModal isOpen={isOpen} toggle={toggle}>
             <MDBModalHeader
@@ -14,6 +13,7 @@ const EventModal = ({ isOpen, toggle, handleInputChange, addEvent }) => {
             </MDBModalHeader>
             <MDBModalBody>
                 <form className='mx-3 gray-text'>
+                    {/* Polje za unos vremena */}
                     <MDBInput
                         name='time'
                         label='Time'
@@ -21,8 +21,9 @@ const EventModal = ({ isOpen, toggle, handleInputChange, addEvent }) => {
                         hint='12:30'
                         group
                         type='text'
-                        getValue={handleInputChange('time')}
+                        onChange={(e) => handleInputChange('time')(e.target.value)}
                     />
+                    {/* Polje za unos naslova */}
                     <MDBInput
                         name='title'
                         label='Title'
@@ -30,23 +31,25 @@ const EventModal = ({ isOpen, toggle, handleInputChange, addEvent }) => {
                         hint='Briefing'
                         group
                         type='text'
-                        getValue={handleInputChange('title')}
+                        onChange={(e) => handleInputChange('title')(e.target.value)}
                     />
+                    {/* Polje za unos lokacije */}
                     <MDBInput
                         name='location'
                         label='Location (optional)'
                         icon='map'
                         group
                         type='text'
-                        getValue={handleInputChange('location')}
+                        onChange={(e) => handleInputChange('location')(e.target.value)}
                     />
+                    {/* Polje za unos opisa */}
                     <MDBInput
                         name='description'
                         label='Description (optional)'
                         icon='sticky-note'
                         group
                         type='text'
-                        getValue={handleInputChange('description')}
+                        onChange={(e) => handleInputChange('description')(e.target.value)}
                     />
                     <button
                         type='button'
