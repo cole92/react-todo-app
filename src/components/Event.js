@@ -1,4 +1,4 @@
-import { MDBBadge } from 'mdbreact';
+import { MDBBadge, MDBIcon } from 'mdbreact';
 import React, { Component } from 'react';
 import EventDetails from './EventDetails';
 
@@ -14,6 +14,14 @@ class Event extends Component {
                 >
                     -
                 </MDBBadge>
+
+                {/* Ikonica za uredjivanje */}
+                <MDBIcon 
+                fas
+                icon="edit"
+                className='ml-2 float-right text-secondary'
+                onClick={() => this.props.onEdit(this.props.id)}
+                /> 
 
                 {/* Komponenta EventDetails koja prikazuje detalje */}
                 <EventDetails 
