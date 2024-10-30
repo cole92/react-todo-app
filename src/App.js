@@ -67,6 +67,20 @@ class App extends Component {
     saveEventstoStorage(updatedEvents); // Cuvamo azurirani niz u storage
   };
 
+  // Metoda za izmenu postojeceg zadatka
+  editEvent = (eventId) => {
+    const eventToEdit = this.state.events.find(event => event.id === eventId);
+
+    this.setState({
+      time: eventToEdit.time,
+      title: eventToEdit.title,
+      location: eventToEdit.location,
+      description: eventToEdit.description,
+      editingId: eventId
+    });
+    this.toggleModal();
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -90,6 +104,7 @@ class App extends Component {
                       location={x.location}
                       description={x.description}
                       onDelete={this.handleDelete} // Prosledjivanje metode za brisanje dogadjaja
+                      onEdit={this.editEvent}
                     />
                   ))
                 )}
