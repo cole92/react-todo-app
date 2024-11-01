@@ -1,7 +1,7 @@
 import React from "react";
 import { MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter, MDBInput } from 'mdbreact';
 
-const EventModal = ({ isOpen, toggle, handleInputChange, addEvent }) => {
+const EventModal = ({ isOpen, toggle, handleInputChange, addEvent, time, title, location, description }) => {
     return (
         <MDBModal isOpen={isOpen} toggle={toggle}>
             <MDBModalHeader
@@ -22,6 +22,7 @@ const EventModal = ({ isOpen, toggle, handleInputChange, addEvent }) => {
                         group
                         type='text'
                         onChange={(e) => handleInputChange('time')(e.target.value)}
+                        value={time}
                     />
                     {/* Polje za unos naslova */}
                     <MDBInput
@@ -32,6 +33,7 @@ const EventModal = ({ isOpen, toggle, handleInputChange, addEvent }) => {
                         group
                         type='text'
                         onChange={(e) => handleInputChange('title')(e.target.value)}
+                        value={title}
                     />
                     {/* Polje za unos lokacije */}
                     <MDBInput
@@ -41,6 +43,7 @@ const EventModal = ({ isOpen, toggle, handleInputChange, addEvent }) => {
                         group
                         type='text'
                         onChange={(e) => handleInputChange('location')(e.target.value)}
+                        value={location}
                     />
                     {/* Polje za unos opisa */}
                     <MDBInput
@@ -50,6 +53,7 @@ const EventModal = ({ isOpen, toggle, handleInputChange, addEvent }) => {
                         group
                         type='text'
                         onChange={(e) => handleInputChange('description')(e.target.value)}
+                        value={description}
                     />
                     <button
                         type='button'

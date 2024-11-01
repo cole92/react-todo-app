@@ -47,7 +47,7 @@ class App extends Component {
       time: this.state.time,
       title: this.state.title,
       location: this.state.location,
-      description: this.state.description,
+      description: this.state.description
     };
     const updatedEvents = addNewEvent(this.state.events, newEvent); // Koristimo funkciju addNewEvent
     this.setState({
@@ -160,6 +160,10 @@ class App extends Component {
           toggle={this.toggleModal}
           handleInputChange={this.handleInputChange}
           addEvent={this.addEvent}
+          time={this.state.time}
+          title={this.state.title}
+          location={this.state.location}
+          description={this.state.description}
         />
       </React.Fragment>
     );
